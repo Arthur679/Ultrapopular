@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Relatórios Ultra Popular 2024</title>
+    <style>
+        body {
+            background-color: #B22222; /* Tom vermelho */
+            color: black; /* Letras pretas */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .login-box, .branch-selection, .report-screen {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-box input, .branch-selection button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+        }
+        .login-box button, .branch-selection button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-box button:hover, .branch-selection button:hover {
+            background-color: #45a049;
+        }
+        .footer, .nav-menu {
+            position: fixed;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            left: 0;
+        }
+        .nav-menu {
+            display: none; /* Inicialmente oculto */
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+            top: 0;
+            z-index: 1000;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .nav-menu button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .nav-menu button:hover {
+            background-color: #45a049;
+        }
+        iframe {
+            margin-top: 20px;
+            width: 100%;
+            height: 80vh; /* Ajustado para ocupar 80% da altura da viewport */
+            border: none;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup button:hover {
+            background-color: #45a049;
+        }
+        .support-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            z-index: 1000;
+        }
+        .support-icon:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        var userRole;
+
+        function showWelcomePopup() {
+            var popup = document.getElementById('welcome-popup');
+            popup.style.display = 'block';
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 10000); // Ocultar após 10 segundos
+        }
+
+        function closePopup() {
+            document.getElementById('welcome-popup').style.display = 'none';
+        }
+
+        function checkLogin(event) {
+            event.preventDefault(); // Evita o comportamento padrão do formulário
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // Credenciais válidas
+            var credentials = {
+                'Araxá': '36646197',
+                'Coromandel': '38412980',
+                'Perdizes': '36631234',
+                'Rodrigo': '3092',
+                'Dimas': '4123',
+                'Adriano': 'AHS106',
+                'Matheus': 'MFMP95',
+                'Eliseu': 'EJS122',
+                'admin': '778529'
+            };
+
+            if (credentials[username] === password) {
+                userRole = username;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('branch-selection').style.display = 'block';
+                showWelcomePopup();
+            } else {
+                alert('Usuário ou senha incorretos.');
+            }
+        }
+
+        function selectBranch(branch) {
+            // Permissões baseadas no papel do usuário
+            var permittedBranches = {
+                'Araxá': ['Araxá', 'RECADOS'],
+                'Coromandel': ['Coromandel', 'RECADOS'],
+                'Perdizes': ['Perdizes', 'RECADOS'],
+                'Eliseu': ['Araxá', 'Gerencial Araxá', 'RECADOS'],
+                'Adriano': ['Coromandel', 'Gerencial Coromandel', 'RECADOS'],
+                'Matheus': ['Perdizes', 'Gerencial Perdizes', 'RECADOS'],
+                'Dimas': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral'],
+                'Rodrigo': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Araxá', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral'],
+                'admin': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Araxá', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral']
+            };
+
+            if (permittedBranches[userRole].includes(branch)) {
+                document.getElementById('branch-selection').style.display = 'none';
+                document.getElementById('report-screen').style.display = 'block';
+
+                // Atualiza o link do iframe baseado na filial
+                var iframe = document.querySelector('iframe');
+                switch (branch) {
+                    case 'Araxá':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiZmVkNWJkZDgtOTVkZi00ZWVlLThkYjItNDg2NmU0ZGQzZTJiIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Geral':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMzU0ZGUzMTMtMWU5My00MDExLWJlMTQtZTJjZTE4YWY5ZTk1IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Coromandel':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNmUxZTlkMjYtY2JhZS00NDZlLWExNzMtNDQyZmRiYWQ1MmY3IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Perdizes':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMTZmM2EzMzctN2VjMC00MWFkLWFkNzUtYjgyM2RlOTRhY2UyIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Gerencial Araxá':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMjJkN2UzNmEtNjViYi00NWI4LThhMjktMjcwYzA2NjQ2YjA2IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Gerencial Coromandel':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiYTdiNDhjNTAtNDg4Yi00YzFkLThkZDAtZDE5ZDE2NDZjYjZkIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'Gerencial Perdizes':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNzQ2Y2NkNzktNTgyNi00ODliLTkxOGQtZjc0NWM5MjJjODgxIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                }
+
+                // Exibe o iframe
+                document.querySelector('iframe').style.display = 'block';
+            } else {
+                alert('Você não tem permissão para acessar esta filial.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('login-form').addEventListener('submit', checkLogin);
+            document.getElementById('Araxá-btn').addEventListener('click', function() { selectBranch('Araxá'); });
+            document.getElementById('Coromandel-btn').addEventListener('click', function() { selectBranch('Coromandel'); });
+            document.getElementById('Perdizes-btn').addEventListener('click', function() { selectBranch('Perdizes'); });
+            document.getElementById('Gerencial-btn').addEventListener('click', function() { selectBranch('Gerencial'); });
+            document.getElementById('Geral-btn').addEventListener('click', function() { selectBranch('Geral'); });
+        });
+    </script>
+</head>
+<body>
+    <div id="login-screen" class="container login-box">
+        <h1>Central de Relatórios Ultra Popular 2024</h1>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Usuário" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="branch-selection" class="container branch-selection" style="display: none;">
+        <h2>Selecione a Filial</h2>
+        <button id="Araxá-btn">Araxá</button>
+        <button id="Coromandel-btn">Coromandel</button>
+        <button id="Perdizes-btn">Perdizes</button>
+        <button id="Gerencial-btn">Gerencial</button>
+        <button id="Geral-btn">Geral</button>
+    </div>
+
+    <div id="report-screen" class="container report-screen" style="display: none;">
+        <h2>Relatório</h2>
+        <iframe src="" frameborder="0"></iframe>
+    </div>
+
+    <div id="welcome-popup" class="popup">
+        <p>Bem-vindo(a) à Central de Relatórios Ultra Popular 2024!</p>
+        <button onclick="closePopup()">Fechar</button>
+    </div>
+
+    <div class="support-icon">
+        <a href="https://wa.me/5532999999999" target="_blank" style="color: white; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <div class="nav-menu">
+        <button onclick="window.history.back()">Voltar</button>
+        <button onclick="window.location.href = 'login.html'">Menu Inicial</button>
+        <button onclick="window.location.reload()">Sair</button>
+    </div>
+
+    <div class="footer">
+        <p>Criado e desenvolvido por Arthur Marcelo versão 1.5</p>
+    </div>
+</body>
+</html>
