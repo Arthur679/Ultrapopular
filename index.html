@@ -101,30 +101,19 @@
         .popup button:hover {
             background-color: #45a049;
         }
-        .support-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #4CAF50;
+        .support-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FFA500;
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border-radius: 5px;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            font-size: 24px;
-            z-index: 1000;
         }
-        .support-icon:hover {
-            background-color: #45a049;
+        .support-button:hover {
+            background-color: #FF8C00;
         }
     </style>
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         var userRole;
 
@@ -146,20 +135,13 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
 
-            // Credenciais válidas
-            var credentials = {
-                'Araxá': '36646197',
-                'Coromandel': '38412980',
-                'Perdizes': '36631234',
-                'Rodrigo': '3092',
-                'Dimas': '4123',
-                'Adriano': 'AHS106',
-                'Matheus': 'MFMP95',
-                'Eliseu': 'EJS122',
-                'admin': '778529'
-            };
-
-            if (credentials[username] === password) {
+            if ((username === 'admin' && password === '778529') ||
+                (username === 'Araxá' && password === '36646197') ||
+                (username === 'Coromandel' && password === '38412980') ||
+                (username === 'Perdizes' && password === '36631234') ||
+                (username === 'Rodrigo' && password === '3092') ||
+                (username === 'Dimas' && password === '4123')) {
+                
                 userRole = username;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('branch-selection').style.display = 'block';
@@ -170,107 +152,113 @@
         }
 
         function selectBranch(branch) {
-            // Permissões baseadas no papel do usuário
-            var permittedBranches = {
-                'Araxá': ['Araxá', 'RECADOS'],
-                'Coromandel': ['Coromandel', 'RECADOS'],
-                'Perdizes': ['Perdizes', 'RECADOS'],
-                'Eliseu': ['Araxá', 'Gerencial Araxá', 'RECADOS'],
-                'Adriano': ['Coromandel', 'Gerencial Coromandel', 'RECADOS'],
-                'Matheus': ['Perdizes', 'Gerencial Perdizes', 'RECADOS'],
-                'Dimas': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral'],
-                'Rodrigo': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Araxá', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral'],
-                'admin': ['Araxá', 'Coromandel', 'Perdizes', 'RECADOS', 'Gerencial Araxá', 'Gerencial Coromandel', 'Gerencial Perdizes', 'Gerencial Geral']
-            };
-
-            if (permittedBranches[userRole].includes(branch)) {
+            if (userRole === 'Rodrigo' || userRole === 'admin' || 
+                userRole === branch || branch === 'RECADOS' || 
+                (userRole === 'Dimas' && branch !== 'Araxá') || 
+                (userRole === 'Adriano' && (branch === 'Coromandel' || branch === 'Gerencial Coromandel')) || 
+                (userRole === 'Matheus' && (branch === 'Perdizes' || branch === 'Gerencial Perdizes')) || 
+                (userRole === 'Eliseu' && (branch === 'Araxá' || branch === 'Gerencial Araxá'))) {
                 document.getElementById('branch-selection').style.display = 'none';
                 document.getElementById('report-screen').style.display = 'block';
 
                 // Atualiza o link do iframe baseado na filial
                 var iframe = document.querySelector('iframe');
-                switch (branch) {
+                switch(branch) {
                     case 'Araxá':
                         iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiZmVkNWJkZDgtOTVkZi00ZWVlLThkYjItNDg2NmU0ZGQzZTJiIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
-                    case 'Geral':
+                    case 'Gerencial Geral':
                         iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMzU0ZGUzMTMtMWU5My00MDExLWJlMTQtZTJjZTE4YWY5ZTk1IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                     case 'Coromandel':
                         iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNmUxZTlkMjYtY2JhZS00NDZlLWExNzMtNDQyZmRiYWQ1MmY3IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                     case 'Perdizes':
-                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMTZmM2EzMzctN2VjMC00MWFkLWFkNzUtYjgyM2RlOTRhY2UyIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiYzJiOTUyMzAtMjI5Zi00NmI2LTgxZjktYTJhOWEyNWQ4MjEzIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        break;
+                    case 'RECADOS':
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNDU3ZTYwZWItOWJiZC00NTNiLWI4N2QtM2YxMmI2NGJlZDQzIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                     case 'Gerencial Araxá':
-                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiMjJkN2UzNmEtNjViYi00NWI4LThhMjktMjcwYzA2NjQ2YjA2IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiZmVkNWJkZDgtOTVkZi00ZWVlLThkYjItNDg2NmU0ZGQzZTJiIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                     case 'Gerencial Coromandel':
-                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiYTdiNDhjNTAtNDg4Yi00YzFkLThkZDAtZDE5ZDE2NDZjYjZkIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNmUxZTlkMjYtY2JhZS00NDZlLWExNzMtNDQyZmRiYWQ1MmY3IiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                     case 'Gerencial Perdizes':
-                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiNzQ2Y2NkNzktNTgyNi00ODliLTkxOGQtZjc0NWM5MjJjODgxIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
+                        iframe.src = 'https://app.powerbi.com/view?r=eyJrIjoiYzJiOTUyMzAtMjI5Zi00NmI2LTgxZjktYTJhOWEyNWQ4MjEzIiwidCI6IjJmN2ZlNjE5LWQ0M2EtNDQ0Yy04OGNmLWQwYjlhN2YzODUxYiJ9';
                         break;
                 }
-
-                // Exibe o iframe
-                document.querySelector('iframe').style.display = 'block';
             } else {
-                alert('Você não tem permissão para acessar esta filial.');
+                alert('Acesso negado para esta filial.');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('login-form').addEventListener('submit', checkLogin);
-            document.getElementById('Araxá-btn').addEventListener('click', function() { selectBranch('Araxá'); });
-            document.getElementById('Coromandel-btn').addEventListener('click', function() { selectBranch('Coromandel'); });
-            document.getElementById('Perdizes-btn').addEventListener('click', function() { selectBranch('Perdizes'); });
-            document.getElementById('Gerencial-btn').addEventListener('click', function() { selectBranch('Gerencial'); });
-            document.getElementById('Geral-btn').addEventListener('click', function() { selectBranch('Geral'); });
-        });
+        function logout() {
+            document.getElementById('report-screen').style.display = 'none';
+            document.getElementById('branch-selection').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'block';
+        }
+
+        window.onload = function() {
+            document.querySelector('.support-button').onclick = function() {
+                window.open('https://wa.me/5534984046491', '_blank');
+            };
+        };
     </script>
 </head>
 <body>
+    <!-- Tela de Login -->
     <div id="login-screen" class="container login-box">
         <h1>Central de Relatórios Ultra Popular 2024</h1>
-        <form id="login-form">
+        <form onsubmit="checkLogin(event)">
             <input type="text" id="username" placeholder="Usuário" required>
             <input type="password" id="password" placeholder="Senha" required>
-            <button type="submit">Login</button>
+            <button type="submit">Entrar</button>
         </form>
     </div>
 
+    <!-- Tela de Seleção de Filial -->
     <div id="branch-selection" class="container branch-selection" style="display: none;">
-        <h2>Selecione a Filial</h2>
-        <button id="Araxá-btn">Araxá</button>
-        <button id="Coromandel-btn">Coromandel</button>
-        <button id="Perdizes-btn">Perdizes</button>
-        <button id="Gerencial-btn">Gerencial</button>
-        <button id="Geral-btn">Geral</button>
+        <h1>Selecione a Filial</h1>
+        <button onclick="selectBranch('Araxá')">Araxá</button>
+        <button onclick="selectBranch('Coromandel')">Coromandel</button>
+        <button onclick="selectBranch('Perdizes')">Perdizes</button>
+        <button onclick="selectBranch('Gerencial Geral')">Gerencial Geral</button>
+        <button onclick="selectBranch('Gerencial Araxá')">Gerencial Araxá</button>
+        <button onclick="selectBranch('Gerencial Coromandel')">Gerencial Coromandel</button>
+        <button onclick="selectBranch('Gerencial Perdizes')">Gerencial Perdizes</button>
+        <button onclick="selectBranch('RECADOS')">RECADOS</button>
+        <button onclick="logout()">Sair</button>
     </div>
 
+    <!-- Tela de Relatório -->
     <div id="report-screen" class="container report-screen" style="display: none;">
-        <h2>Relatório</h2>
+        <h1>Relatório</h1>
         <iframe src="" frameborder="0"></iframe>
+        <div class="nav-menu">
+            <button onclick="selectBranch('Araxá')">Araxá</button>
+            <button onclick="selectBranch('Coromandel')">Coromandel</button>
+            <button onclick="selectBranch('Perdizes')">Perdizes</button>
+            <button onclick="selectBranch('Gerencial Geral')">Gerencial Geral</button>
+            <button onclick="selectBranch('Gerencial Araxá')">Gerencial Araxá</button>
+            <button onclick="selectBranch('Gerencial Coromandel')">Gerencial Coromandel</button>
+            <button onclick="selectBranch('Gerencial Perdizes')">Gerencial Perdizes</button>
+            <button onclick="selectBranch('RECADOS')">RECADOS</button>
+            <button onclick="logout()">Sair</button>
+        </div>
+        <div class="footer">
+            Central de Relatórios Ultra Popular 2024 - Versão 1.5
+        </div>
     </div>
 
+    <!-- Popup de Boas-Vindas -->
     <div id="welcome-popup" class="popup">
-        <p>Bem-vindo(a) à Central de Relatórios Ultra Popular 2024!</p>
+        <p>Bem-vindo à Central de Relatórios Ultra Popular 2024!</p>
         <button onclick="closePopup()">Fechar</button>
     </div>
 
-    <div class="support-icon">
-        <a href="https://wa.me/5532999999999" target="_blank" style="color: white; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
-    </div>
-
-    <div class="nav-menu">
-        <button onclick="window.history.back()">Voltar</button>
-        <button onclick="window.location.href = 'login.html'">Menu Inicial</button>
-        <button onclick="window.location.reload()">Sair</button>
-    </div>
-
-    <div class="footer">
-        <p>Criado e desenvolvido por Arthur Marcelo versão 1.5</p>
-    </div>
+    <!-- Botão de Suporte -->
+    <button class="support-button">Suporte via WhatsApp</button>
 </body>
 </html>
